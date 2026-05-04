@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div>
+        <p class="section-label mb-1">дневник</p>
+        <h1 class="h2 mb-0">Мои записи</h1>
+    </div>
+    <a href="{{ url_for('add_session') }}" class="btn btn-dark">+ Добавить запись</a>
+</div>
+
+<div class="calendar-head d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    {% if prev_month %}
+        <a href="{{ url_for('diary', month=prev_month) }}" class="btn btn-outline-dark btn-sm">←</a>
+    {% else %}
+        <span class="btn btn-outline-dark btn-sm disabled calendar-nav-disabled">←</span>
+    {% endif %}
+    <h2 class="h5 mb-0">{{ month_title }}</h2>
+    {% if next_month %}
+        <a href="{{ url_for('diary', month=next_month) }}" class="btn btn-outline-dark btn-sm">→</a>
+    {% else %}
+        <span class="btn btn-outline-dark btn-sm disabled calendar-nav-disabled">→</span>
+    {% endif %}
+</div>
+
+<div class="calendar-box mb-5">
+    <div class="calendar-weekdays">
+        <div>Пн</div>
+        <div>Вт</div>
+        <div>Ср</div>
+        <div>Чт</div>
+        <div>Пт</div>
+        <div>Сб</div>
+        <div>Вс</div>
+    </div>
+
+    {% for week in calendar_weeks %}
+    <div class="calendar-grid">
+        {% for day in week %}
+        <div class="calendar-day {% if not day.current_month %}calendar-day-muted{% endif %}">
+            <div class="calendar-day-top">
+                <span class="calendar-day-number">{{ day.day }}</span>
+            </div>
+
+            <div class="calendar-items">
+                {% for session in day.sessions %}
+                    <div class="calendar-item">
+                        <div class="calendar-item-title">{{ session.location }}</div>
+                        <div class="calendar-item-text">
+                            {{ session.start_time }}{% if session.had_tan %} · {{ session.duration }} мин{% endif %}
+                        </div>
+                        <div class="calendar-tags">
+                            <span class="tag">UV {{ session.uv_index if session.uv_index is not none else "—" }}</span>
+                            <span class="tag">{{ session.skin_type }}</span>
+                            <span class="tag">{{ "SPF" if session.used_spf else "без SPF" }}</span>
+                            <span class="tag">{{ "загар" if session.had_tan else "без загара" }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+
+{% if not sessions %}
+    <div class="empty-box text-center">
+        <h2 class="h4 mb-2">Пока пусто</h2>
+        <p class="mb-0 text-muted">В этом месяце записей нет.</p>
+    </div>
+{% else %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h4 mb-0">Записи за месяц</h2>
+    </div>
+
+    <div class="row g-4">
+        {% for session in sessions %}
+        <div class="col-md-6 col-xl-4">
+            <div class="session-card h-100">
+                {% if session.photo_path %}
+                    <img src="{{ url_for('uploaded_file', filename=session.photo_path) }}" class="session-photo" alt="photo">
+                {% endif %}
+
+                <div class="p-3">
+                    <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                        <div>
+                            <h2 class="h5 mb-1">{{ session.location }}</h2>
+                            <p class="text-muted small mb-0">{{ session.date }} · {{ session.start_time }}</p>
+                        </div>
+                        <span class="badge text-bg-light">UV {{ session.uv_index if session.uv_index is not none else "—" }}</span>
+                    </div>
+
+                    {% if session.had_tan %}
+                    <p class="mb-2"><strong>{{ session.duration }}</strong> мин на солнце</p>
+                    {% else %}
+                    <p class="mb-2"><strong>Без загара</strong></p>
+                    {% endif %}
+                    <p class="small mb-2">
+                        На улице: {{ "да" if session.was_outside else "нет" }} ·
+                        SPF: {{ "да" if session.used_spf else "нет" }} ·
+                        Загар: {{ "да" if session.had_tan else "нет" }} ·
+                        Фототип: {{ session.skin_type }}
+                    </p>
+
+                    {% if session.notes %}
+                        <p class="small text-secondary mb-3">{{ session.notes }}</p>
+                    {% endif %}
+
+                    <form method="post" action="{{ url_for('delete_session', session_id=session.id) }}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}
