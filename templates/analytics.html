@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block content %}
+<p class="section-label mb-1">аналитика</p>
+<h1 class="h2 mb-2">Аналитика вашего загара и нанесения SPF</h1>
+
+{% if not stats %}
+    <div class="empty-box text-center">
+        <h2 class="h4 mb-2">Пока нет данных</h2>
+        <p class="mb-0 text-muted">Когда появятся записи, здесь покажется аналитика по загару и SPF.</p>
+    </div>
+{% else %}
+    <div class="row g-4">
+        <div class="col-md-3 col-6">
+            <div class="mini-card text-center h-100">
+                <p class="section-label">Всего записей в дневнике</p>
+                <div class="big-stat">{{ stats.count }}</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="mini-card text-center h-100">
+                <p class="section-label">Процент SPF во всех записях</p>
+                <div class="big-stat">{{ stats.spf_rate }}%</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="mini-card text-center h-100">
+                <p class="section-label">средний uv</p>
+                <div class="big-stat">{{ stats.avg_uv }}</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="mini-card text-center h-100">
+                <p class="section-label">среднияя длительность загара (мин)</p>
+                <div class="big-stat">{{ stats.avg_tan_time }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-md-4">
+            <div class="mini-card text-center h-100">
+                <p class="section-label">всего записей с загаром</p>
+                <div class="big-stat">{{ stats.tan_count }}</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="mini-card text-center h-100">
+                <p class="section-label">записей с высоким uv</p>
+                <div class="big-stat">{{ stats.high_uv_sessions }}</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="mini-card text-center h-100">
+                <p class="section-label">записей с высоким uv без spf</p>
+                <div class="big-stat">{{ stats.high_uv_without_spf }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-lg-7">
+            <div class="advice-box h-100">
+                <p class="section-label mb-2">что важно</p>
+                <div class="mb-3">
+                    <p class="mb-1"><strong>SPF в записях с загаром:</strong> {{ stats.tan_spf_rate }}%</p>
+                    <p class="mb-1"><strong>Высокий UV с SPF:</strong> {{ stats.high_uv_spf_rate }}%</p>
+                    <p class="mb-0"><strong>Максимальный UV:</strong> {{ stats.max_uv }}</p>
+                </div>
+                <div class="note-box">
+                    {{ stats.insight }}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="mini-card h-100">
+                <p class="section-label mb-2">профиль кожи</p>
+                <h2 class="h5 mb-2">Фототип {{ stats.common_skin_type }}</h2>
+                <p class="mb-2 text-muted">{{ stats.common_skin_label }} · встречался {{ stats.common_skin_count }} раз(а)</p>
+                <div class="tag mb-3">{{ stats.skin_tip }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mini-card mt-4">
+        <p class="section-label mb-2">распределение фототипов</p>
+        <div class="d-flex flex-wrap gap-2">
+            {% for skin_type, count in stats.skin_type_counts.items() %}
+                <span class="tag">Фототип {{ skin_type }} · {{ count }}</span>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
