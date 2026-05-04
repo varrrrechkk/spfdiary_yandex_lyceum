@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero-card">
+    <div class="row g-4 align-items-center">
+        <div class="col-lg-6">
+            <p class="section-label mb-2">SunDiary</p>
+            <h1 class="display-5 fw-semibold mb-3">Дневник SPF-привычки</h1>
+
+            <div class="position-relative">
+                <label for="location-input" class="form-label">Местоположение</label>
+                <input type="text"
+                       class="form-control form-control-lg"
+                       id="location-input"
+                       name="location"
+                       placeholder="Начни вводить город"
+                       autocomplete="off"
+                       spellcheck="false">
+                <div id="suggestions" class="autocomplete-suggestions d-none"></div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="info-card h-100 d-flex flex-column justify-content-center">
+                <div class="d-flex justify-content-between align-items-start gap-3">
+                    <div>
+                        <p class="section-label mb-1">сейчас</p>
+                        <h2 class="h3 mb-0" id="location-title">Выбери локацию</h2>
+                    </div>
+                    <span class="badge rounded-pill text-bg-light uv-badge">UV <span id="uv-value">—</span></span>
+                </div>
+
+                <div class="mt-4">
+                    <div class="small text-muted mb-1">Температура</div>
+                    <div class="weather-number" id="temp-value">—</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
