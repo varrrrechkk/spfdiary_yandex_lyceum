@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="form-card">
+            <p class="section-label">регистрация</p>
+            <h1 class="h3 mb-4">Создать аккаунт</h1>
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label">Логин</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Пароль</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Повтори пароль</label>
+                    <input type="password" name="password2" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-dark">Регистрация</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
