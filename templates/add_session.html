@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="form-card">
+            <p class="section-label">новая запись</p>
+            <h1 class="h3 mb-4">Добавить SPF-день</h1>
+
+            <form method="post" enctype="multipart/form-data" id="sessionForm" novalidate>
+                <div class="row g-3">
+                    <div class="col-md-6 position-relative">
+                        <label class="form-label">Местоположение</label>
+                        <input type="text"
+                               name="location"
+                               id="location-input"
+                               class="form-control"
+                               placeholder="Например, Сочи"
+                               value="{{ request.form.get('location', '') }}"
+                               autocomplete="off"
+                               spellcheck="false"
+                               required>
+                        <div id="suggestions" class="autocomplete-suggestions d-none"></div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Дата</label>
+                        <input type="date" name="date" id="date" class="form-control" value="{{ request.form.get('date', '') }}" required>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Время</label>
+                        <input type="time" name="start_time" id="start_time" class="form-control" value="{{ request.form.get('start_time', '') }}" required>
+                    </div>
+
+                    <div class="col-12">
+                        <div id="location-status" class="location-status d-none"></div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Тип кожи по Фицпатрику</label>
+                        <select name="skin_type" class="form-select" required>
+                            {% for key, label in skin_types.items() %}
+                                <option value="{{ key }}" {% if request.form.get('skin_type', 'II') == key %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Были на улице?</label>
+                        <select name="was_outside" id="was_outside" class="form-select">
+                            <option value="yes" {% if request.form.get('was_outside', 'yes') == 'yes' %}selected{% endif %}>Да</option>
+                            <option value="no" {% if request.form.get('was_outside') == 'no' %}selected{% endif %}>Нет</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Наносили SPF?</label>
+                        <select name="used_spf" class="form-select">
+                            <option value="yes" {% if request.form.get('used_spf', 'no') == 'yes' %}selected{% endif %}>Да</option>
+                            <option value="no" {% if request.form.get('used_spf', 'no') == 'no' %}selected{% endif %}>Нет</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Загорали?</label>
+                        <select name="had_tan" id="had_tan" class="form-select">
+                            <option value="yes" {% if request.form.get('had_tan', 'no') == 'yes' %}selected{% endif %}>Да</option>
+                            <option value="no" {% if request.form.get('had_tan', 'no') == 'no' %}selected{% endif %}>Нет</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4" id="duration-wrap">
+                        <label class="form-label">Длительность загара, мин</label>
+                        <input type="number" name="duration" id="duration-input" class="form-control" min="1" value="{{ request.form.get('duration', '') }}">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">UV-индекс</label>
+                        <input type="text" id="uv_index" class="form-control" placeholder="Авто" readonly>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Температура</label>
+                        <input type="text" id="temp_value" class="form-control" placeholder="Авто" readonly>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Фото</label>
+                        <input type="file" name="photo" class="form-control" accept=".jpg,.jpeg,.png,.webp">
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Заметки</label>
+                        <textarea name="notes" class="form-control" rows="4" placeholder="Что было по ощущениям, был ли SPF и т.д.">{{ request.form.get('notes', '') }}</textarea>
+                    </div>
+                </div>
+
+
+                <div class="mt-4 d-flex gap-2 flex-wrap">
+                    <button type="submit" class="btn btn-dark" id="submit-button">Сохранить</button>
+                    <a href="{{ url_for('diary') }}" class="btn btn-outline-dark">Отмена</a>
+                </div>
+
+                <p class="form-hint mt-3 mb-0">
+                    UV-индекс и температура определяются автоматически по месту, дате и времени.
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
