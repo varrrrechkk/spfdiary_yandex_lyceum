@@ -3,4 +3,3 @@ Flask-SQLAlchemy
 Flask-Login
 Flask-RESTful
 requests
-gunicorn
